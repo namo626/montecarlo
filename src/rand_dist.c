@@ -13,6 +13,7 @@
 double normal_dist(double mean, double dev);
 double uniform_dist(double min, double max);
 
+//Test main
 int main() {
 	srand(time(NULL));
 	double sum = 0;
