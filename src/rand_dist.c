@@ -12,15 +12,32 @@
 
 double normal_dist(double mean, double dev);
 double uniform_dist(double min, double max);
+void test_normal_dist();
+void test_uniform_dist();
 
-//Test main
 int main() {
 	srand(time(NULL));
-	double sum = 0;
-	for (int i = 0; i < 100000; i++) {
-		sum += uniform_dist(0, 10);
+	test_normal_dist();
+	test_uniform_dist();
+}
+
+void test_uniform_dist() {
+	FILE* f = fopen("test_uniform.txt", "w");
+	for (int i = 0; i < 50000; i++) {
+		fprintf(f, "%f\n", uniform_dist(0, 1));
 	}
-	printf("SUM: %f", sum / 100000);
+	fclose(f);
+	printf("Done\n");
+}
+
+//Test normal distribution
+void test_normal_dist() {
+	FILE* f = fopen("test_normal.txt", "w");
+	for (int i = 0; i < 50000; i++) {
+		fprintf(f, "%f\n", normal_dist(0, 1));
+	}
+	fclose(f);
+	printf("Done\n");
 }
 
 /*
