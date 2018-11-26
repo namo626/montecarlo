@@ -55,6 +55,14 @@ double getTime() {
   return TIME;
 }
 
+void setSize(int size) {
+  SIZE = size;
+}
+
+int getSize() {
+  return SIZE;
+}
+
 
 // planning stage
 // param is the size of project/number of planners
@@ -64,8 +72,11 @@ void planning (int size, int workers) {
     return;
   }
 
+  setSize(size);
+
   // at first, more workers mean less time, but too many cooks...
-  double expected_time = pow((0.1 * workers), 3) - (0.4 * workers) + size;
+  // double expected_time = pow((0.1 * workers), 3) - (0.4 * workers) + (5*size);
+  double expected_time = size*10*exp(-0.1*workers) + (5*size);
   // time uncertainity increases as project is bigger
   double time_spread = 0.1 * (workers + size);
   // use normal dist. for time
@@ -87,10 +98,10 @@ void planning (int size, int workers) {
 }
 
 // param is the amount of materials needed
-void execution(int labor, int* amounts) {
+double execution(int labor, int* amounts) {
   if (labor == 0 || amounts == NULL) {
     printf("Project cannot be empty\n");
-    return;
+    return 0;
   }
 
   // cost
@@ -105,29 +116,32 @@ void execution(int labor, int* amounts) {
   // time depends on the amount of workers and materials, i.e.
   // bigger projects need more time
   int amount = amounts[0] + amounts[1] + amounts[2];
-  double expected_time = pow((0.1 * labor), 3) - (0.4 * labor) + amount;
+  //double expected_time = pow(((0.5/SIZE) * labor), 3) - (0.6 * labor) + (SIZE*10);
+  int size = getSize();
+  double expected_time = size*50*exp(-0.05*labor) + (15*size);
   double time_unc = 0.2 * labor + 0.05 * amount;
   double time = normal(expected_time, time_unc);
 
   addCost(cost);
   addTime(time);
-  SIZE = amount + labor;
 
   printf("Execution time: %.1f\n", time);
   printf("Execution cost: %.1f\n\n", cost);
+
+  return time;
 };
 
-void maintenance() {
-  double T = getTime();
+void maintenance(double exe_time) {
   double C = getCost();
+  int size = getSize();
 
   // time is the same as the execution because it occurs simultaneously
-  double base_cost = SIZE + 0.01 * T;
+  double base_cost = size + 0.01 * exe_time;
 
   // current cost and time taken also affect the spread
   // the larger the cost and time, the more uncertain
   // the cost and time in this phase
-  double cost_unc = 1.5*T + 0.7*C;
+  double cost_unc = 1.5*exe_time + 0.7*C;
 
   // use poisson dist
   double cost = poisson(base_cost, cost_unc);
@@ -183,8 +197,8 @@ double** runSim(int trials, int size_estimate, int planners, int labor, int* mat
     reset();
 
     planning(size_estimate, planners);
-    execution(labor, materials);
-    maintenance();
+    double exe_time = execution(labor, materials);
+    maintenance(exe_time);
     finalization();
 
     double time = getTime();
@@ -233,24 +247,30 @@ void printArr(double* arr, int length) {
   }
 }
 
-int main() {
-  int size_estimate = 5;
-  int planners = 10;
-  int labors = 10;
+int main(int argc, char* argv[]) {
+  if (argc != 5) {
+    printf("Wrong number of arguments\n");
+    return 1;
+  }
+
+  int size_estimate = atoi(argv[1]);
+  int planners = atoi(argv[2]);
+  int labors = atoi(argv[3]);
   int materials[3] = {5, 5, 6};
-  int trials = 1;
+  int trials = atoi(argv[4]);
 
   double** results = runSim(trials, size_estimate, planners, labors, materials);
   printf("Total time\n");
   printArr(results[0], trials);
   printf("Total cost\n");
   printArr(results[1], trials);
-
-  printf("Time distribution:\n");
-  printHist(results[0], trials, 200);
   printf("\n");
-  printf("Cost distribution:\n");
-  printHist(results[1], trials, 200);
+
+  /* printf("Time distribution:\n"); */
+  /* printHist(results[0], trials, 200); */
+  /* printf("\n"); */
+  /* printf("Cost distribution:\n"); */
+  /* printHist(results[1], trials, 200); */
 
   return 0;
 }
