@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include "rand_dist.h"
 
 double maximum(double* arr, int length) {
   if (arr == NULL) {
@@ -266,11 +267,11 @@ int main(int argc, char* argv[]) {
   printArr(results[1], trials);
   printf("\n");
 
-  /* printf("Time distribution:\n"); */
-  /* printHist(results[0], trials, 200); */
-  /* printf("\n"); */
-  /* printf("Cost distribution:\n"); */
-  /* printHist(results[1], trials, 200); */
+  printf("Time distribution:\n");
+  printHist(results[0], trials, 200);
+  printf("\n");
+  printf("Cost distribution:\n");
+  printHist(results[1], trials, 200);
 
   return 0;
 }

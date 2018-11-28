@@ -9,17 +9,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "rand_dist.h"
 
 double normal_dist(double mean, double dev);
 double uniform_dist(double min, double max);
 void test_normal_dist();
 void test_uniform_dist();
 
-int main() {
-	srand(time(NULL));
-	test_normal_dist();
-	test_uniform_dist();
-}
+// int main() {
+// 	srand(time(NULL));
+// 	test_normal_dist();
+// 	test_uniform_dist();
+// }
 
 void test_uniform_dist() {
 	FILE* f = fopen("test_uniform.txt", "w");
