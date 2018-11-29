@@ -327,3 +327,34 @@ void printArr(double* arr, int length) {
     printf("%.2f\n", arr[i]);
   }
 }
+
+double expectation(double* arr, int length) {
+  if (arr == NULL || length == 0) {
+    printf("Array cannot be empty\n");
+    return 0;
+  }
+
+  double sum = 0;
+  for (int i = 0; i < length; i++) {
+    sum = sum + arr[i];
+  }
+
+  return (sum / (double)length);
+
+}
+
+double deviation(double* arr, int length) {
+  if (arr == NULL || length == 0) {
+    printf("Array cannot be empty\n");
+    return 0;
+  }
+
+  double expected = expectation(arr, length);
+  double sum;
+  for (int i = 0; i < length; i++) {
+    sum = sum + pow((arr[i] - expected), 2);
+  }
+  double dev = sqrt(sum / (double)length);
+
+  return dev;
+}

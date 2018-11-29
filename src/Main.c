@@ -32,9 +32,19 @@ int main(int argc, char* argv[]) {
 
   printf("Time distribution:\n");
   printHist(time_taken, trials, 10);
+  printf("Expected value  Standard Dev\n");
+  double expected_time = expectation(time_taken, trials);
+  double dev_time = deviation(time_taken, trials);
+  printf("%.2f         %.2f\n", expected_time, dev_time);
+
   printf("\n");
   printf("Cost distribution:\n");
   printHist(cost_involved, trials, 200);
+  printf("Expected value  Standard Dev\n");
+  double expected_cost = expectation(cost_involved, trials);
+  double dev_cost = deviation(cost_involved, trials);
+  printf("%.2f         %.2f\n", expected_cost, dev_cost);
+
 
   return 0;
 }

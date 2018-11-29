@@ -19,4 +19,7 @@ void printArr(double* arr, int length);
 // turn debugging on or off
 void debugMode(char* str);
 
+double expectation(double* arr, int length);
+double deviation(double* arr, int length);
+
 #endif
