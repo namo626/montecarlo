@@ -14,10 +14,16 @@ int main(int argc, char* argv[]) {
   int size_estimate = atoi(argv[1]);
   int planners = atoi(argv[2]);
   int labors = atoi(argv[3]);
-  int materials[3] = {5, 5, 6};
+  // int materials[3] = {5, 5, 6};
   int trials = atoi(argv[4]);
 
-  double** results = runSim(trials, size_estimate, planners, labors, materials);
+  Result* results = runSim(trials, size_estimate, planners, labors);
+  if (results == NULL) {
+    printf("No results were generated\n");
+    return 1;
+  }
+  double* time_taken = totalTime(results);
+  double* cost_involved = totalCost(results);
   /* printf("Total time\n"); */
   /* printArr(results[0], trials); */
   /* printf("Total cost\n"); */
@@ -25,10 +31,10 @@ int main(int argc, char* argv[]) {
   /* printf("\n"); */
 
   printf("Time distribution:\n");
-  printHist(results[0], trials, 10);
+  printHist(time_taken, trials, 10);
   printf("\n");
   printf("Cost distribution:\n");
-  printHist(results[1], trials, 200);
+  printHist(cost_involved, trials, 200);
 
   return 0;
 }

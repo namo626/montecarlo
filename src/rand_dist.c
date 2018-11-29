@@ -11,6 +11,10 @@
 #include <time.h>
 #include "rand_dist.h"
 
+#ifndef M_PI
+#define M_PI 3.141593
+#endif
+
 double normal_dist(double mean, double dev);
 double uniform_dist(double min, double max);
 void test_normal_dist();

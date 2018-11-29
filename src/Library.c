@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string.h>
+
 #include "rand_dist.h"
 #include "Library.h"
 
@@ -14,6 +16,11 @@ Result* mkResult(double* time, double* cost) {
   Result* result = malloc(sizeof(Result));
   if (result == NULL) {
     printf("Not enough memory\n");
+    return NULL;
+  }
+
+  if (time == NULL || cost == NULL) {
+    printf("No results given\n");
     return NULL;
   }
 
@@ -59,18 +66,18 @@ double maximum(double* arr, int length) {
 
 // global state variables: time and cost
 double TIME;
+// avg for a house (size = 1) is 120 days
+// avg for a building is 420 days
+// avg for a mall is 1095 days
 double COST;
+// avg for houses (size = 1) is 100k USD
+// avg for a building (size = 5) is 1,500k USD
+// avg for malls (size = 10) is 25,000k USD
 
 // actual "size" quantity of the project
 int SIZE;
 
-double normal(double mean, double spread) {
-  return mean;
-}
 
-double poisson(double mean, double spread) {
-  return mean;
-}
 
 void reset() {
   TIME = 0;
@@ -106,29 +113,32 @@ int getSize() {
 // planning stage
 // param is the size of project/number of planners
 void planning (int size, int workers) {
-  if (workers == 0 || size == 0) {
-    printf("Planners must be at least 1\n");
-    return;
+  if (workers == 0) {
+    printf("There must be at least one planner\n");
+    exit(1);
+  }
+
+  if (size < 1 || size > 10) {
+    printf("Size must be between 1-10\n");
+    exit(1);
   }
 
   setSize(size);
 
-  // at first, more workers mean less time, but too many cooks...
-  // double expected_time = pow((0.1 * workers), 3) - (0.4 * workers) + (5*size);
-  double expected_time = size*10*exp(-0.1*workers) + (5*size);
+  // this models a simple diminishing returns
+  double expected_time = size*5*exp(-0.1*workers) + (2*size);
   // time uncertainity increases as project is bigger
   double time_spread = 0.1 * (workers + size);
   // use normal dist. for time
-  double time = normal_dist(expected_time, time_spread);
+  double time = abs(normal_dist(expected_time, time_spread));
 
   // cost depends linearly on size AND time (for maintenance)
-  double expected_cost = 3 * (workers + size + time);
+  double expected_cost = 0.1 * (workers + size + time);
   // cost uncertainty depends on the amount of planners
   double cost_unc = 0.1 * workers;
   // use normal dist for now
-  double cost = normal_dist(expected_cost, cost_unc);
+  double cost = abs(normal_dist(expected_cost, cost_unc));
 
-  // increment the total time
   addTime(time);
   addCost(cost);
 
@@ -139,28 +149,29 @@ void planning (int size, int workers) {
 }
 
 // param is the amount of materials needed
-double execution(int labor, int* amounts) {
-  if (labor == 0 || amounts == NULL) {
-    printf("Project cannot be empty\n");
-    return 0;
+double execution(int labor) {
+  if (labor == 0) {
+    printf("At least 1 labor. You can't build a house out of thin air.\n");
+    exit(1);
   }
 
   // cost
-  double laborCost = labor * normal_dist(10, 0.2);
+  double laborCost = labor * abs(normal_dist(10, 0.2));
 
   // sum all the material costs
-  double exteriors = amounts[0] * normal_dist(47, 16.63);
-  double interiors = amounts[1] * normal_dist(25.94, 14.4);
-  double roof = amounts[2] * normal_dist(33.99, 12.41);
-  double cost = laborCost + exteriors + interiors + roof;
+  /* double exteriors = amounts[0] * normal_dist(47, 16.63); */
+  /* double interiors = amounts[1] * normal_dist(25.94, 14.4); */
+  /* double roof = amounts[2] * normal_dist(33.99, 12.41); */
+  int size = getSize();
+  double materialCost = size * abs(normal_dist(10, 2));
+  double cost = laborCost + materialCost;
 
   // time depends on the amount of workers and materials, i.e.
   // bigger projects need more time
-  int amount = amounts[0] + amounts[1] + amounts[2];
+  // int amount = amounts[0] + amounts[1] + amounts[2];
   //double expected_time = pow(((0.5/SIZE) * labor), 3) - (0.6 * labor) + (SIZE*10);
-  int size = getSize();
-  double expected_time = size*50*exp(-0.05*labor) + (15*size);
-  double time_unc = 0.2 * labor + 0.05 * amount;
+  double expected_time = size*30*exp(-0.5*labor/size) + (100*size);
+  double time_unc = 0.2 * labor;
   double time = normal_dist(expected_time, time_unc);
 
   addCost(cost);
@@ -179,15 +190,15 @@ void maintenance(double exe_time) {
   int size = getSize();
 
   // time is the same as the execution because it occurs simultaneously
-  double base_cost = size + 0.01 * exe_time;
+  double base_cost = size + 0.1 * exe_time;
 
   // current cost and time taken also affect the spread
   // the larger the cost and time, the more uncertain
   // the cost and time in this phase
-  double cost_unc = 1.5*exe_time + 0.7*C;
+  double cost_unc = 0.05*exe_time + 0.2*C;
 
   // use poisson dist
-  double cost = poisson(base_cost, cost_unc);
+  double cost = abs(normal_dist(base_cost, cost_unc));
 
   addCost(cost);
 
@@ -206,15 +217,15 @@ void finalization() {
   // expected analysis time increases exponentially with
   // time and cost taken; if the amount of problems is high
   // it is much harder to analyze what went wrong
-  double time_exp = 0.1*exp(0.0001*T) + 0.2*exp(0.0002*C) + 5.0;
+  double time_exp = 0.1*exp(0.001*T) + 0.2*exp(0.0002*C);
   // time uncertainty increases linearly with time and cost taken
-  double time_unc = 0.5 * (T + C);
-  double time = poisson(time_exp, time_unc);
+  double time_unc = 0.01 * (T + C);
+  double time = abs(normal_dist(time_exp, time_unc));
 
   // cost again depends on time
-  double cost_exp = 60 * time;
-  double cost_unc = 0.7 * (T + C);
-  double cost = poisson(cost_exp, cost_unc);
+  double cost_exp = 0.02 * time;
+  double cost_unc = 0.001 * (T + C);
+  double cost = abs(normal_dist(cost_exp, cost_unc));
 
   addCost(cost);
   addTime(time);
@@ -226,43 +237,54 @@ void finalization() {
 
 }
 
-double** runSim(int trials, int size_estimate, int planners, int labor, int* materials) {
-  double** results = malloc( 2 * sizeof(double*) );
-  results[0] = malloc(trials * sizeof(double));
-  results[1] = malloc(trials * sizeof(double));
-
+Result* runSim(int trials, int size_estimate, int planners, int labor) {
   if (trials == 0) {
     printf("Trials must be at least 1\n");
-    return NULL;
+    exit(1);
   }
 
-  if (results == NULL) {
-    printf("Not enough memory to malloc\n");
-    return NULL;
+
+  double* timeArr = malloc(trials * sizeof(double));
+  double* costArr = malloc(trials * sizeof(double));
+
+  if (timeArr == NULL || costArr == NULL) {
+    printf("Not enough memory to malloc results\n");
+    exit(1);
   }
 
   for (int i = 0; i < trials; i++) {
     reset();
 
     planning(size_estimate, planners);
-    double exe_time = execution(labor, materials);
+    double exe_time = execution(labor);
     maintenance(exe_time);
     finalization();
 
     double time = getTime();
     double cost = getCost();
 
-    results[0][i] = time;
-    results[1][i] = cost;
+    timeArr[i] = time;
+    costArr[i] = cost;
   }
 
-  return results;
+  Result* result = mkResult(timeArr, costArr);
+  return result;
 }
+
+
+
+/*************************************************************/
+/* Generic functions on a double array */
 
 // print the histogram of a given result array (1D)
 void printHist(double* results, int n, int binSize) {
   if (results == NULL || n == 0) {
     printf("No results given\n");
+    return;
+  }
+
+  if (binSize < 1) {
+    printf("Bin width must be at least 1\n");
     return;
   }
 
@@ -296,6 +318,11 @@ void printHist(double* results, int n, int binSize) {
 
 // print a 1D array of doubles
 void printArr(double* arr, int length) {
+  if (arr == NULL || length == 0) {
+    printf("Array cannot be empty\n");
+    return;
+  }
+
   for (int i = 0; i < length; i++) {
     printf("%.2f\n", arr[i]);
   }
