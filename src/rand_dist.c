@@ -9,12 +9,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include "rand_dist.h"
+
+#ifndef M_PI
+#define M_PI 3.141593
+#endif
 
 double normal_dist(double mean, double dev);
 double uniform_dist(double min, double max);
 void test_normal_dist();
 void test_uniform_dist();
 
+<<<<<<< HEAD
 int main() {
 	srand(time(NULL));
 	test_normal_dist();
@@ -32,6 +38,13 @@ void read_file(char* configfile) {
 	}
 	fclose(ifp);
 }
+=======
+// int main() {
+// 	srand(time(NULL));
+// 	test_normal_dist();
+// 	test_uniform_dist();
+// }
+>>>>>>> branch 'master' of https://github.com/namo626/montecarlo.git
 
 void test_uniform_dist() {
 	FILE* f = fopen("test_uniform.txt", "w");
