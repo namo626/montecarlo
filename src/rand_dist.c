@@ -20,6 +20,18 @@ int main() {
 	test_normal_dist();
 	test_uniform_dist();
 }
+void read_file(char* configfile) {
+	if (configfile == NULL) {
+		return;
+	}
+	FILE* ifp;
+	ifp = fopen(configfile, "r");
+	if (ifp == NULL) {
+		printf("Could not open file");
+		return;
+	}
+	fclose(ifp);
+}
 
 void test_uniform_dist() {
 	FILE* f = fopen("test_uniform.txt", "w");
@@ -54,6 +66,7 @@ double normal_dist(double mean, double dev) {
 	double u1, u2, z0;
 
 	if (!generate) {
+		//If we have previously generated a randomly distributed number, use that
 		return z1 * dev + mean;
 	}
 	u1 = ((double) rand() / (double) RAND_MAX);

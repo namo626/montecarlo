@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <stdlib.h>
 
 // global state variables: time and cost
@@ -34,3 +34,4 @@ void execution(double param) {
     addTime(time);
   }
 };
+*/

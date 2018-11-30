@@ -232,7 +232,7 @@ void printArr(double* arr, int length) {
     printf("%.2f\n", arr[i]);
   }
 }
-
+/*
 int main() {
   int size_estimate = 5;
   int planners = 10;
@@ -253,4 +253,4 @@ int main() {
   printHist(results[1], trials, 200);
 
   return 0;
-}
+}*/
