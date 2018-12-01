@@ -1,4 +1,4 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
@@ -184,9 +184,6 @@ double execution(int labor) {
 
   return time;
 };
-<<<<<<< HEAD
-*/
-=======
 
 void maintenance(double exe_time) {
   double C = getCost();
@@ -361,4 +358,3 @@ double deviation(double* arr, int length) {
 
   return dev;
 }
->>>>>>> branch 'master' of https://github.com/namo626/montecarlo.git

@@ -20,12 +20,6 @@ double uniform_dist(double min, double max);
 void test_normal_dist();
 void test_uniform_dist();
 
-<<<<<<< HEAD
-int main() {
-	srand(time(NULL));
-	test_normal_dist();
-	test_uniform_dist();
-}
 void read_file(char* configfile) {
 	if (configfile == NULL) {
 		return;
@@ -36,15 +30,17 @@ void read_file(char* configfile) {
 		printf("Could not open file");
 		return;
 	}
+	char c[1000];
+	while (fgets(c, sizeof c, ifp) != NULL) {
+		char *split = strtok(c, " ");
+		while(split != NULL){
+
+			split = strtok(" ", NULL);
+		}
+	}
+
 	fclose(ifp);
 }
-=======
-// int main() {
-// 	srand(time(NULL));
-// 	test_normal_dist();
-// 	test_uniform_dist();
-// }
->>>>>>> branch 'master' of https://github.com/namo626/montecarlo.git
 
 void test_uniform_dist() {
 	FILE* f = fopen("test_uniform.txt", "w");
@@ -103,4 +99,50 @@ double uniform_dist(double min, double max) {
 	double diff = max - min;
 	double random_num = (diff / RAND_MAX) * rand() + min;
 	return random_num;
+}
+
+void printCumulativeHist(double *results, int n, int binSize) {
+	// print the cumulative histogram of a given result array (1D)
+	if (results == NULL || n == 0) {
+		printf("No results given\n");
+		return;
+	}
+
+	if (binSize < 1) {
+		printf("Bin width must be at least 1\n");
+		return;
+	}
+
+	int upper = binSize;
+
+	double range = results[0];
+
+	for (int i = 1; i < n; i++) {
+		if (results[i] > range) {
+			range = results[i];
+		}
+	}
+
+	int steps = 1 + (range / binSize);
+
+	for (int i = 0; i < steps; i++) {
+		printf("%d:", upper);
+
+		// sum the amount in this bin
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			if (results[i] <= upper) {
+				sum = sum + 1;
+			}
+		}
+		printf("  %d ", sum);
+
+		for (int j = 0; j < (sum / 5); j++) {
+			printf("x ");
+		}
+		printf("\n");
+
+		upper = upper + binSize;
+	}
+
 }

@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Library.h"
+#include "rand_dist.h"
 
 
 int main(int argc, char* argv[]) {
@@ -32,6 +33,7 @@ int main(int argc, char* argv[]) {
 
   printf("Time distribution:\n");
   printHist(time_taken, trials, 10);
+  printCumulativeHist(time_taken, trials, 10);
   printf("Expected value  Standard Dev\n");
   double expected_time = expectation(time_taken, trials);
   double dev_time = deviation(time_taken, trials);
@@ -40,6 +42,9 @@ int main(int argc, char* argv[]) {
   printf("\n");
   printf("Cost distribution:\n");
   printHist(cost_involved, trials, 200);
+  printf("\n");
+  printf("Cumulative cost distribution:\n");
+  printCumulativeHist(cost_involved, trials, 200);
   printf("Expected value  Standard Dev\n");
   double expected_cost = expectation(cost_involved, trials);
   double dev_cost = deviation(cost_involved, trials);
