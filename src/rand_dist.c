@@ -1,4 +1,4 @@
-/*
+/*^
  * rand_dist.c
  *
  *  Created on: 16 nov. 2018
@@ -20,12 +20,11 @@ double uniform_dist(double min, double max);
 void test_normal_dist();
 void test_uniform_dist();
 
-<<<<<<< HEAD
-int main() {
-	srand(time(NULL));
-	test_normal_dist();
-	test_uniform_dist();
-}
+/* int main() { */
+/* 	srand(time(NULL)); */
+/* 	test_normal_dist(); */
+/* 	test_uniform_dist(); */
+/* } */
 void read_file(char* configfile) {
 	if (configfile == NULL) {
 		return;
@@ -38,13 +37,6 @@ void read_file(char* configfile) {
 	}
 	fclose(ifp);
 }
-=======
-// int main() {
-// 	srand(time(NULL));
-// 	test_normal_dist();
-// 	test_uniform_dist();
-// }
->>>>>>> branch 'master' of https://github.com/namo626/montecarlo.git
 
 void test_uniform_dist() {
 	FILE* f = fopen("test_uniform.txt", "w");
