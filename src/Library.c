@@ -6,7 +6,9 @@
 #include "rand_dist.h"
 #include "Library.h"
 
-// result container
+
+int DEBUG;
+
 struct Result {
   double* total_time;
   double* total_cost;
@@ -30,23 +32,22 @@ Result* mkResult(double* time, double* cost) {
 }
 
 double* totalTime(Result* result) {
+  if (result == NULL) {
+    printf("Result is empty\n");
+    return NULL;
+  }
   return result->total_time;
 }
 
 double* totalCost(Result* result) {
+  if (result == NULL) {
+    printf("Result is empty\n");
+    return NULL;
+  }
   return result->total_cost;
 }
 
-int DEBUG;
 
-void debugMode(char* str) {
-  if (strcmp(str, "TRUE")) {
-    DEBUG = 0;
-  }
-  else {
-    DEBUG = 1;
-  }
-}
 
 double maximum(double* arr, int length) {
   if (arr == NULL) {
@@ -74,10 +75,8 @@ double COST;
 // avg for a building (size = 5) is 1,500k USD
 // avg for malls (size = 10) is 25,000k USD
 
-// actual "size" quantity of the project
+// actual "size" quantity of the project from 1 to 10
 int SIZE;
-
-
 
 void reset() {
   TIME = 0;
@@ -142,7 +141,7 @@ void planning (int size, int workers) {
   addTime(time);
   addCost(cost);
 
-  if (DEBUG == 0) {
+  if (DEBUG == 1) {
     printf("Planning time: %.1f\n", time);
     printf("Planning cost: %.1f\n\n", cost);
   }
@@ -158,18 +157,12 @@ double execution(int labor) {
   // cost
   double laborCost = labor * abs(normal_dist(10, 0.2));
 
-  // sum all the material costs
-  /* double exteriors = amounts[0] * normal_dist(47, 16.63); */
-  /* double interiors = amounts[1] * normal_dist(25.94, 14.4); */
-  /* double roof = amounts[2] * normal_dist(33.99, 12.41); */
   int size = getSize();
   double materialCost = size * abs(normal_dist(10, 2));
   double cost = laborCost + materialCost;
 
   // time depends on the amount of workers and materials, i.e.
   // bigger projects need more time
-  // int amount = amounts[0] + amounts[1] + amounts[2];
-  //double expected_time = pow(((0.5/SIZE) * labor), 3) - (0.6 * labor) + (SIZE*10);
   double expected_time = size*30*exp(-0.5*labor/size) + (100*size);
   double time_unc = 0.2 * labor;
   double time = normal_dist(expected_time, time_unc);
@@ -177,7 +170,7 @@ double execution(int labor) {
   addCost(cost);
   addTime(time);
 
-  if (DEBUG == 0) {
+  if (DEBUG == 1) {
     printf("Execution time: %.1f\n", time);
     printf("Execution cost: %.1f\n\n", cost);
   }
@@ -202,7 +195,7 @@ void maintenance(double exe_time) {
 
   addCost(cost);
 
-  if (DEBUG == 0) {
+  if (DEBUG == 1) {
     printf("Maintenance cost: %.1f\n\n", cost);
   }
 
@@ -212,8 +205,6 @@ void maintenance(double exe_time) {
 void finalization() {
   double T = getTime();
   double C = getCost();
-  /* printf("T: %.2f\n", T); */
-  /* printf("C: %.2f\n", C); */
   // expected analysis time increases exponentially with
   // time and cost taken; if the amount of problems is high
   // it is much harder to analyze what went wrong
@@ -230,19 +221,27 @@ void finalization() {
   addCost(cost);
   addTime(time);
 
-  if (DEBUG == 0) {
+  if (DEBUG == 1) {
     printf("Finalization time: %.1f\n", time);
     printf("Finalization cost: %.1f\n\n", cost);
   }
 
 }
 
-Result* runSim(int trials, int size_estimate, int planners, int labor) {
+Result* runSim(int trials, int size_estimate, int planners, int labor, char* debugMode) {
   if (trials == 0) {
     printf("Trials must be at least 1\n");
     exit(1);
   }
 
+  if (strcmp(debugMode, "TRUE")) {
+    printf("Debugging is turned on\n");
+    DEBUG = 1;
+  }
+  else {
+    printf("Debugging is turned off\n");
+    DEBUG = 0;
+  }
 
   double* timeArr = malloc(trials * sizeof(double));
   double* costArr = malloc(trials * sizeof(double));
@@ -277,9 +276,9 @@ Result* runSim(int trials, int size_estimate, int planners, int labor) {
 /* Generic functions on a double array */
 
 // print the histogram of a given result array (1D)
-void printHist(double* results, int n, int binSize) {
-  if (results == NULL || n == 0) {
-    printf("No results given\n");
+void printHist(double* arr, int n, int binSize) {
+  if (arr == NULL || n == 0) {
+    printf("No array given\n");
     return;
   }
 
@@ -290,24 +289,24 @@ void printHist(double* results, int n, int binSize) {
 
   int lower = 0;
   int upper = binSize;
-  double range = maximum(results, n);
+  double range = maximum(arr, n);
   int steps = 1 + (range / binSize);
 
   for (int i = 0; i < steps; i++ ) {
-    printf("%d:", upper);
+    printf("%d", upper);
 
     // sum the amount in this bin
     int sum = 0;
     for (int i = 0; i < n; i++) {
-      if (lower < results[i] && results[i] <= upper) {
+      if (lower < arr[i] && arr[i] <= upper) {
         sum = sum + 1;
       }
     }
-    printf("  %d ", sum);
+    printf(" %d", sum);
 
-    for (int j = 0; j < (sum/5); j++) {
-      printf("x ");
-    }
+    /* for (int j = 0; j < (sum/5); j++) { */
+    /*   printf("x "); */
+    /* } */
     printf("\n");
 
     lower = upper;
