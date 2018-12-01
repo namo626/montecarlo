@@ -9,7 +9,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <ctype.h>
+#include <string.h>
 #include "rand_dist.h"
+#include "Library.h"
 
 #ifndef M_PI
 #define M_PI 3.141593
@@ -20,27 +23,6 @@ double uniform_dist(double min, double max);
 void test_normal_dist();
 void test_uniform_dist();
 
-void read_file(char* configfile) {
-	if (configfile == NULL) {
-		return;
-	}
-	FILE* ifp;
-	ifp = fopen(configfile, "r");
-	if (ifp == NULL) {
-		printf("Could not open file");
-		return;
-	}
-	char c[1000];
-	while (fgets(c, sizeof c, ifp) != NULL) {
-		char *split = strtok(c, " ");
-		while(split != NULL){
-
-			split = strtok(" ", NULL);
-		}
-	}
-
-	fclose(ifp);
-}
 
 void test_uniform_dist() {
 	FILE* f = fopen("test_uniform.txt", "w");
