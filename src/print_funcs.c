@@ -62,8 +62,7 @@ void read_file(char* configfile) {
 			i++;
 			split = strtok(NULL, " ");
 		}
-		debugMode(debug);
-		Result* results = runSim(trials, size_estimate, planners, labors);
+		Result* results = runSim(trials, size_estimate, planners, labors, debug);
 		if (results == NULL) {
 			printf("No results were generated\n");
 			exit(1);
