@@ -11,6 +11,6 @@ int main(int argc, char* argv[]) {
 	}
 	char* inputfile = argv[1];
 	read_file(inputfile);
-	return 0;
 
+	return 0;
 }

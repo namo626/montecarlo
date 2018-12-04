@@ -11,6 +11,7 @@
 #include <time.h>
 #include <ctype.h>
 #include <string.h>
+#include <unistd.h>
 #include "rand_dist.h"
 #include "Library.h"
 #include "print_funcs.h"
@@ -54,6 +55,9 @@ void read_file(char* configfile) {
 				printf("Debug mode: %s\n", split);
 			} else if (i == 5) {
 				outfile = split;
+				if(outfile[strlen(outfile)-1] == '\n'){
+					outfile[strlen(outfile)-1] = '\0';
+				}
 				printf("Output file: %s\n", split);
 			} else {
 				printf("Wrong number of arguments in input file.\n");
