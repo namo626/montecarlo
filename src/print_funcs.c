@@ -16,6 +16,9 @@
 #include "Library.h"
 #include "print_funcs.h"
 
+void printCumulativeHist(double *results, int n, int binSize);
+void print_hist_to_file(double* arr, int n, int binSize, FILE *ofp);
+
 void read_file(char* configfile) {
 	printf("Starting to read file...\n");
 	if (configfile == NULL) {
@@ -55,8 +58,8 @@ void read_file(char* configfile) {
 				printf("Debug mode: %s\n", split);
 			} else if (i == 5) {
 				outfile = split;
-				if(outfile[strlen(outfile)-1] == '\n'){
-					outfile[strlen(outfile)-1] = '\0';
+				if (outfile[strlen(outfile) - 1] == '\n') {
+					outfile[strlen(outfile) - 1] = '\0';
 				}
 				printf("Output file: %s\n", split);
 			} else {
@@ -66,7 +69,8 @@ void read_file(char* configfile) {
 			i++;
 			split = strtok(NULL, " ");
 		}
-		Result* results = runSim(trials, size_estimate, planners, labors, debug);
+		Result* results = runSim(trials, size_estimate, planners, labors,
+				debug);
 		if (results == NULL) {
 			printf("No results were generated\n");
 			exit(1);
@@ -77,6 +81,22 @@ void read_file(char* configfile) {
 	fclose(ifp);
 }
 
+double max(double* arr, int length) {
+	if (arr == NULL) {
+		return 0;
+	}
+
+	double max = arr[0];
+
+	for (int i = 1; i < length; i++) {
+		if (arr[i] > max) {
+			max = arr[i];
+		}
+	}
+
+	return max;
+}
+
 void print_output(Result* results, int trials, char* outfile) {
 	printf("Writing to file...\n");
 	FILE *ofp;
@@ -85,23 +105,29 @@ void print_output(Result* results, int trials, char* outfile) {
 	double* cost_involved = totalCost(results);
 
 	printf("Time distribution:\n");
+	fprintf(ofp, "Time distribution:\n");
 	printHist(time_taken, trials, 10);
+	print_hist_to_file(time_taken, trials, 10, ofp);
 	printf("\n");
 	printf("Cumulative time distribution:\n");
 	printCumulativeHist(time_taken, trials, 10);
 	printf("Expected value  Standard Dev\n");
+	fprintf(ofp, "\nExpected value  Standard Dev\n");
 	double expected_time = expectation(time_taken, trials);
 	double dev_time = deviation(time_taken, trials);
 	printf("%.2f         %.2f\n", expected_time, dev_time);
+	fprintf(ofp, "%.2f         %.2f\n", expected_time, dev_time);
 
 	printf("\n");
 	printf("Cost distribution:\n");
 	printHist(cost_involved, trials, 200);
+	fprintf(ofp, "\n\nCost distribution:\n");
+	print_hist_to_file(cost_involved, trials, 200, ofp);
 	printf("\n");
 	printf("Cumulative cost distribution:\n");
 	printCumulativeHist(cost_involved, trials, 200);
 	printf("Expected value  Standard Dev\n");
-	fprintf(ofp, "Expected value  Standard Dev\n");
+	fprintf(ofp, "\nExpected value  Standard Dev\n");
 	double expected_cost = expectation(cost_involved, trials);
 	double dev_cost = deviation(cost_involved, trials);
 	printf("%.2f         %.2f\n", expected_cost, dev_cost);
@@ -110,3 +136,83 @@ void print_output(Result* results, int trials, char* outfile) {
 	fclose(ofp);
 	printf("Done writing to file\n\n");
 }
+
+void printCumulativeHist(double *results, int n, int binSize) {
+	// print the cumulative histogram of a given result array (1D)
+	if (results == NULL || n == 0) {
+		printf("No results given\n");
+		return;
+	}
+
+	if (binSize < 1) {
+		printf("Bin width must be at least 1\n");
+		return;
+	}
+
+	int upper = binSize;
+
+	double range = results[0];
+
+	for (int i = 1; i < n; i++) {
+		if (results[i] > range) {
+			range = results[i];
+		}
+	}
+
+	int steps = 1 + (range / binSize);
+
+	for (int i = 0; i < steps; i++) {
+		printf("%d:", upper);
+
+		// sum the amount in this bin
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			if (results[i] <= upper) {
+				sum = sum + 1;
+			}
+		}
+		printf("  %d ", sum);
+
+		for (int j = 0; j < (sum / 5); j++) {
+			printf("x ");
+		}
+		printf("\n");
+
+		upper = upper + binSize;
+	}
+
+}
+
+void print_hist_to_file(double* arr, int n, int binSize, FILE *ofp) {
+	if (arr == NULL || n == 0) {
+		printf("No array given\n");
+		return;
+	}
+
+	if (binSize < 1) {
+		printf("Bin width must be at least 1\n");
+		return;
+	}
+
+	int lower = 0;
+	int upper = binSize;
+	double range = max(arr, n);
+	int steps = 1 + (range / binSize);
+
+	for (int i = 0; i < steps; i++) {
+		fprintf(ofp, "%d", upper);
+
+		// sum the amount in this bin
+		int sum = 0;
+		for (int i = 0; i < n; i++) {
+			if (lower < arr[i] && arr[i] <= upper) {
+				sum = sum + 1;
+			}
+		}
+		fprintf(ofp, " %d\n", sum);
+
+		lower = upper;
+		upper = upper + binSize;
+	}
+}
+

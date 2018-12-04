@@ -6,6 +6,4 @@ double uniform_dist(double min, double max);
 // normal distribution
 double normal_dist(double mean, double dev);
 
-void printCumulativeHist(double *results, int n, int binSize);
-
 #endif
