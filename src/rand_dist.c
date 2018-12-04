@@ -1,11 +1,3 @@
-
-/*
- * rand_dist.c
- *
- *  Created on: 16 nov. 2018
- *      Author: axel_
- */
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

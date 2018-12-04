@@ -1,0 +1,142 @@
+Time distribution:
+10 0
+20 0
+30 0
+40 0
+50 0
+60 0
+70 0
+80 0
+90 0
+100 0
+110 0
+120 0
+130 0
+140 0
+150 0
+160 0
+170 0
+180 0
+190 0
+200 0
+210 0
+220 0
+230 0
+240 0
+250 0
+260 0
+270 0
+280 0
+290 0
+300 0
+310 0
+320 0
+330 0
+340 0
+350 0
+360 0
+370 0
+380 0
+390 0
+400 0
+410 0
+420 0
+430 0
+440 0
+450 0
+460 0
+470 0
+480 0
+490 2
+500 26
+510 122
+520 261
+530 327
+540 182
+550 64
+560 15
+570 1
+
+
+Cumulative time distribution:
+10:  0 
+20:  0 
+30:  0 
+40:  0 
+50:  0 
+60:  0 
+70:  0 
+80:  0 
+90:  0 
+100:  0 
+110:  0 
+120:  0 
+130:  0 
+140:  0 
+150:  0 
+160:  0 
+170:  0 
+180:  0 
+190:  0 
+200:  0 
+210:  0 
+220:  0 
+230:  0 
+240:  0 
+250:  0 
+260:  0 
+270:  0 
+280:  0 
+290:  0 
+300:  0 
+310:  0 
+320:  0 
+330:  0 
+340:  0 
+350:  0 
+360:  0 
+370:  0 
+380:  0 
+390:  0 
+400:  0 
+410:  0 
+420:  0 
+430:  0 
+440:  0 
+450:  0 
+460:  0 
+470:  0 
+480:  0 
+490:  2 
+500:  28 x x x x x 
+510:  150 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+520:  411 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+530:  738 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+540:  920 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+550:  984 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+560:  999 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+570:  1000 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+
+Expected value  Standard Dev
+522.74         25.79
+
+
+Cost distribution:
+200 0
+400 0
+600 410
+800 543
+1000 46
+1200 1
+
+
+Cumulative cost distribution:
+200:  0 
+400:  0 
+600:  410 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+800:  953 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+1000:  999 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+1200:  1000 x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x x 
+
+Expected value  Standard Dev
+638.97         93.25

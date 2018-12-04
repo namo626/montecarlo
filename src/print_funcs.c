@@ -1,10 +1,3 @@
-/*
- * print_funcs.c
- *
- *  Created on: 1 dec. 2018
- *      Author: axel_
- */
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +9,7 @@
 #include "Library.h"
 #include "print_funcs.h"
 
-void printCumulativeHist(double *results, int n, int binSize);
+void print_cumulative_hist(double *results, int n, int binSize, FILE *ofp);
 void print_hist_to_file(double* arr, int n, int binSize, FILE *ofp);
 
 void read_file(char* configfile) {
@@ -110,7 +103,8 @@ void print_output(Result* results, int trials, char* outfile) {
 	print_hist_to_file(time_taken, trials, 10, ofp);
 	printf("\n");
 	printf("Cumulative time distribution:\n");
-	printCumulativeHist(time_taken, trials, 10);
+	fprintf(ofp, "\n\nCumulative time distribution:\n");
+	print_cumulative_hist(time_taken, trials, 10, ofp);
 	printf("Expected value  Standard Dev\n");
 	fprintf(ofp, "\nExpected value  Standard Dev\n");
 	double expected_time = expectation(time_taken, trials);
@@ -125,7 +119,8 @@ void print_output(Result* results, int trials, char* outfile) {
 	print_hist_to_file(cost_involved, trials, 200, ofp);
 	printf("\n");
 	printf("Cumulative cost distribution:\n");
-	printCumulativeHist(cost_involved, trials, 200);
+	fprintf(ofp, "\n\nCumulative cost distribution:\n");
+	print_cumulative_hist(cost_involved, trials, 200, ofp);
 	printf("Expected value  Standard Dev\n");
 	fprintf(ofp, "\nExpected value  Standard Dev\n");
 	double expected_cost = expectation(cost_involved, trials);
@@ -137,7 +132,7 @@ void print_output(Result* results, int trials, char* outfile) {
 	printf("Done writing to file\n\n");
 }
 
-void printCumulativeHist(double *results, int n, int binSize) {
+void print_cumulative_hist(double *results, int n, int binSize, FILE* ofp) {
 	// print the cumulative histogram of a given result array (1D)
 	if (results == NULL || n == 0) {
 		printf("No results given\n");
@@ -163,7 +158,7 @@ void printCumulativeHist(double *results, int n, int binSize) {
 
 	for (int i = 0; i < steps; i++) {
 		printf("%d:", upper);
-
+		fprintf(ofp, "%d:", upper);
 		// sum the amount in this bin
 		int sum = 0;
 		for (int i = 0; i < n; i++) {
@@ -172,11 +167,14 @@ void printCumulativeHist(double *results, int n, int binSize) {
 			}
 		}
 		printf("  %d ", sum);
+		fprintf(ofp, "  %d ", sum);
 
 		for (int j = 0; j < (sum / 5); j++) {
 			printf("x ");
+			fprintf(ofp, "x ");
 		}
 		printf("\n");
+		fprintf(ofp, "\n");
 
 		upper = upper + binSize;
 	}
